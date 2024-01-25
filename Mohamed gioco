@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dino Game</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f7f7f7;
+        }
+
+        #game {
+            position: relative;
+            width: 600px;
+            height: 200px;
+            border: 1px solid #ccc;
+        }
+
+        #dino {
+            position: absolute;
+            bottom: 0;
+            left: 50px;
+            width: 40px;
+            height: 40px;
+            background-color: #666;
+        }
+
+        #cactus {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 20px;
+            height: 40px;
+            background-color: #333;
+        }
+
+        #score {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 24px;
+        }
+    </style>
+</head>
+<body>
+
+<div id="game">
+    <div id="dino"></div>
+    <div id="cactus"></div>
+    <div id="score">0</div>
+</div>
+
+<script>
+    const dino = document.getElementById("dino");
+    const cactus = document.getElementById("cactus");
+    const scoreDisplay = document.getElementById("score");
+
+    let isJumping = false;
+    let score = 0;
+
+    function jump() {
+        if (!isJumping) {
+            isJumping = true;
+            let jumpCount = 0;
+            const jumpInterval = setInterval(() => {
+                const dinoBottom = parseInt(getComputedStyle(dino).bottom);
+                if (jumpCount < 15) {
+                    dino.style.bottom = (dinoBottom + 20) + "px";
+                } else if (jumpCount >= 15 && jumpCount < 30) {
+                    dino.style.bottom = (dinoBottom - 20) + "px";
+                } else {
+                    clearInterval(jumpInterval);
+                    isJumping = false;
+                }
+                jumpCount++;
+            }, 20);
+        }
+    }
+
+    document.addEventListener("keydown", function (event) {
+        if (event.code === "Space") {
+            jump();
+        }
+    });
+
+    function moveCactus() {
+        const cactusRight = parseInt(getComputedStyle(cactus).right);
+        if (cactusRight < 600) {
+            cactus.style.right = (cactusRight + 5) + "px";
+        } else {
+            cactus.style.right = "0px";
+            score++;
+            scoreDisplay.textContent = score;
+        }
+    }
+
+    setInterval(moveCactus, 20);
+</script>
+
+</body>
+</html>
